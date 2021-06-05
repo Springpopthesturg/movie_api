@@ -68,22 +68,6 @@ app.get('/', (req, res) => {
   res.send('Welcome to my app!');
 });
 
-app.get("/directors",(req,res)=>{
-  res.json(directors)
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
-});
-
-app.get('/genres',(req,res)=>{
-  res.json(genres)
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
-});
-
 app.get('/movies', (req, res) => {
   res.json(movies)
     .catch((err) => {

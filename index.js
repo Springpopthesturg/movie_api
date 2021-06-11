@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
+
 const { check, validationResult } = require('express-validator');
 app.use(morgan('common'));
 app.use(bodyParser.json());
+app.use(cors());
 
 
 let movies = [
@@ -69,8 +72,8 @@ app.get('/', (req, res) => {
 });
 
 //Return all movies
-app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Movies.find()
+app.get('/movies', /*passport.authenticate("jwt", { session: false }),*/ (req, res) => {
+  movies.find()
       .then((movies) => {
         res.status(201).json(movies);
       })
@@ -82,7 +85,7 @@ app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) 
 
 //Return Movies of specified genre
 app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Movies.find({ genre: req.params.genre })
+  movies.find({ genre: req.params.genre })
       .then((movies) => {
         res.status(201).json(movies);
       })
@@ -237,7 +240,7 @@ app.post('/users', [
           }});
       });
 
-app.get('/documentation.html', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get('/documentation.html',/* passport.authenticate("jwt", { session: false }),*/ (req, res) => {
   res.sendFile('public/documentation.html', {root: __dirname});
 });
 

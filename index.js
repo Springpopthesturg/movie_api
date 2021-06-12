@@ -73,14 +73,7 @@ app.get('/', (req, res) => {
 
 //Return all movies
 app.get('/movies', /*passport.authenticate("jwt", { session: false }),*/ (req, res) => {
-  movies.find()
-      .then((movies) => {
-        res.status(201).json(movies);
-      })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+  res.json(movies);
 });
 
 //Return Movies of specified genre
@@ -107,7 +100,7 @@ app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (r
   });
 //Returns list of Directors
   app.get ('/movies/:director', passport.authenticate("jwt", { session: false }), (req, res) => {
-    Movies.find ({director: req.params.director})
+    movies.find ({director: req.params.director})
       .then((movies) => {
         res.status(201).json(movies);
       })
@@ -228,7 +221,7 @@ app.post('/users', [
 });
  
   //Adds movies to users favorites
-  app.post ('/users/:Username/Movies/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
+  app.post ('/users/:username/movies/:movieID', passport.authenticate("jwt", { session: false }), (req, res) => {
       Users.findOneAndUpdate ({Username: req.params.Username},
         {
           $addToSet: { Favorites: req.params.MovieID },

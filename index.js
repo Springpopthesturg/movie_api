@@ -1,3 +1,10 @@
+const mongoose = require("mongoose");
+const Models = require("./models");
+
+const Movies = Models.Movie;
+const Users = Models.User;
+const Directors = Models.Director;
+
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -5,65 +12,15 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
+require('./passport');
+
+//Imports auth.js for logins
+const auth = require("./auth")(app);
 
 const { check, validationResult } = require('express-validator');
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(cors());
-
-
-let movies = [
-  {
-    title: 'Pulp Fiction',
-    director: 'Quinton Tarintino',
-    genres: ['Crime', 'Drama']
-  },
-  {
-    title: 'Oldboy',
-    driector: 'Park Chan-wook',
-    genres: ['Action', 'Mystery', 'Drama']
-  },
-  {
-    title: 'Ten Things I Hate About You',
-    driector: 'Gil Junger',
-    genres: 'Romantic Comedy'
-  },
-  {
-    title: 'John Wick',
-    driector: 'Chad Stahelski',
-    genres: ['Neo-Noir', 'Action', 'Thriller']
-  },
-  {
-    title: 'Aladdin',
-    driector: ['Ron Clements', 'John Musker'],
-    genres: ['Musical', 'Romance', 'Fantasy']
-  },
-  {
-    title: 'Star Wars Episode Six Return of the Jedi',
-    driector: 'George Lucas',
-    genres: ['Science Fiction', 'Adventure', 'Action']
-  },
-  {
-    title: 'Accepted',
-    driector: 'Steve Pink',
-    genres: 'Comedy'
-  },
-  {
-    title: 'Back To The Future',
-    driector: 'Robert Zemeckis',
-    genres: ['Adventure', 'Comedy', 'Science Fiction']
-  },
-  {
-    title: 'Master of Disguise',
-    driector: 'Perry Andelin Blake',
-    genres: 'Comedy'
-  },
-  {
-    title: 'Fear and Loathing in Las Vegas',
-    driector: 'Terry Gilliam',
-    genres: ['Biography', 'Surreal']
-  },
-];
 
 //GET Requests
 
@@ -72,13 +29,21 @@ app.get('/', (req, res) => {
 });
 
 //Return all movies
-app.get('/movies', /*passport.authenticate("jwt", { session: false }),*/ (req, res) => {
-  res.json(movies);
-});
+app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) => {
+    Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
 
 //Return Movies of specified genre
 app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (req, res) => {
-  movies.find({ genre: req.params.genre })
+  Movies.find({ genre: req.params.genre })
       .then((movies) => {
         res.status(201).json(movies);
       })
@@ -87,9 +52,10 @@ app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (r
         res.status(500).send("Error: " + err);
       });
   });
+
 //Return a single title of movie
   app.get ('/movies/:title', passport.authenticate("jwt", { session: false }), (req, res) => {
-    movies.findOne({ title: req.params.title })
+    Movies.findOne({ title: req.params.title })
     .then((usermovie) => {
       res.json(usermovie);
     })
@@ -100,7 +66,7 @@ app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (r
   });
 //Returns list of Directors
   app.get ('/movies/:director', passport.authenticate("jwt", { session: false }), (req, res) => {
-    movies.find ({director: req.params.director})
+    Directors.find ({director: req.params.director})
       .then((movies) => {
         res.status(201).json(movies);
       })
@@ -112,7 +78,7 @@ app.get ('/movies/:genres', passport.authenticate("jwt", { session: false }), (r
 
   //Returns single director
   app.get ('/movies/:name', passport.authenticate("jwt", { session: false }), (req, res) => {
-    movies.findOne({ name: req.params.name })
+    Directors.findOne({ name: req.params.name })
   .then((nameDirector) => {
     res.json(nameDirector);
   })
@@ -159,7 +125,7 @@ app.delete('/users/:username', passport.authenticate("jwt", { session: false }),
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send('error: ' + err);
     });
   });
 //delete from users favorites
@@ -174,7 +140,7 @@ app.delete('/users/:username', passport.authenticate("jwt", { session: false }),
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send('error: ' + err);
     });
   });
   
@@ -209,13 +175,13 @@ app.post('/users', [
 				.then((user) => {res.status(201).json(user) })
 			.catch((error) => {
 				console.error(error);
-				res.status(500).send('Error: ' + error);
+				res.status(500).send('error: ' + error);
 			 })
 			}
 		  })
 		  .catch((error) => {
 			  console.error(error);
-			  res.status(500).send('Error: ' + error);
+			  res.status(500).send('error: ' + error);
 		   });  
 	
 });
@@ -227,7 +193,7 @@ app.post('/users', [
           $addToSet: { Favorites: req.params.MovieID },
         },
         { new: true },(err, updatedUser) => {
-          if (err) {res.status(500).send("Error: " + err);
+          if (err) {res.status(500).send("error: " + err);
           } 
           else {res.json(updatedUser);
           }});

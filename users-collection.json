@@ -1,0 +1,4 @@
+{"_id":{"$oid":"60e7bdfef0f05f921ad6872b"},"Username":"IceCream","Password":"C0ne","Email":"Vanilla@hotmail.com","Birthdate":"1990-02-03","FavoriteMovies":[{"$oid":"60edbca7f0f05f921ad68735"}]}
+{"_id":{"$oid":"60e7c11af0f05f921ad6872c"},"Username":"Milkyway","Password":"Galaxy","Email":"universe@yahoo.com","Birthdate":"2000-02-09","FavoriteMovies":[]}
+{"_id":{"$oid":"60e7c211f0f05f921ad6872d"},"Username":"Butter","Password":"M1lk","Email":"Email@email.com","Birthdate":"1990-12-30","FavoriteMovies":[]}
+{"_id":{"$oid":"60e7c36df0f05f921ad6872e"},"Username":"MacBook","Password":"Pr0","Email":"apple@apple.com","Birthdate":"1976-04-01","FavoriteMovies":[]}

@@ -14,6 +14,21 @@ const uuid = require('uuid');
 const passport = require('passport');
 require('./passport');
 
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
+
+/* const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://Springpopthesturg:Bigolepp123@cluster0.7sr51.mongodb.net/my-first-package?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+}); */
+
+mongoose.connect( process.env.CONNECTION_URI , {useNewUrlParser: true, useUnifiedTopology: true}).then(() => console.log("Connection Successful"))
+.catch((err) => console.log(err));
+
+
 //Imports auth.js for logins
 const auth = require("./auth")(app);
 
@@ -181,7 +196,7 @@ Users.findOne({username: req.body.username}).then((response) => {
 }).catch((err) => {
   res.status(500).send('Error: ' + err);
 })
-});
+})
 
 //Adds movies to users favorites
 app.post('/users/:username/movies/:movieID', passport.authenticate("jwt", { session: false }), (req, res) => {

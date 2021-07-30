@@ -6,6 +6,7 @@ const models = require('./models.js');
 const users = models.user;
 const JWTStrategy = passportJWT.Strategy;//jwt strategy assign to a variable
 const ExtractJWT = passportJWT.ExtractJwt; // extract method from header assign to a variable
+const { check, validationResult } = require('express-validator');
 
 
 

@@ -8,20 +8,24 @@ const Directors = Models.Director;
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
 require('./passport');
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB',
+/*mongoose.connect('mongodb://localhost:27017/myFlixDB',
  { 
    useNewUrlParser: true, 
    useUnifiedTopology: true 
-  });
-
-
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
+  });*/
+  /*mongoose.connect('mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/MyFlixDB?retryWrites=true&w=majority',
+ { 
+   useNewUrlParser: true, 
+   useUnifiedTopology: true 
+  });*/
+//mongoimport --uri mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/myFlixDB --collection directors movies genres users --type json --file movie_api/collections/movie_DB.json
+//mongoimport --uri mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/myFlixDB --collection movies --type json --file movie_api/collections/movie_DB.json
+//mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
 
 /* const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://Springpopthesturg:Bigolepp123@cluster0.7sr51.mongodb.net/my-first-package?retryWrites=true&w=majority";
@@ -35,7 +39,8 @@ client.connect(err => {
 mongoose.connect( process.env.CONNECTION_URI , {useNewUrlParser: true, useUnifiedTopology: true}).then(() => console.log("Connection Successful"))
 .catch((err) => console.log(err));
 
-
+const cors = require('cors');
+app.use(cors());
 //Imports auth.js for logins
 const auth = require("./auth")(app);
 
@@ -169,41 +174,33 @@ app.delete('/users/:username/favorites/:movie', passport.authenticate("jwt", { s
 // POST Requests
 
 //create account
-app.post('/users', [
-  // Configure the validation of req.body
-  check('username', 'Username is required').isLength({min: 5, max: 20}),
-  check('username', 'Only alphanumeric characters are allowed'). isAlphanumeric(),
-  check('pwd', 'Password is required').not().isEmpty(),
-  check('email', 'Email not valid'). isEmail()
-],(req, res) => {
-  // Check the validation object for errors
-  let errors = validationResult(req);
-
-  if(!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-  }
-
-let encryptedPassword = Users.hashPassword(req.body.pwd);
-Users.findOne({username: req.body.username}).then((response) => {
-  if (response) {
-      res.status(400).send(req.body.username + ' already exist.');
-  }else {
-      Users.create({
-          username: req.body.username,
-          pwd: encryptedPassword,
-          email: req.body.email,
-          birth_date: req.body.birth_date
-      }).then((user) => {
-          res.status(201).json(user);
-      }).catch((err) => {
-          console.error(err);
-          res.status(500).send('Error: ' + err);
-      })
-  }
-}).catch((err) => {
-  res.status(500).send('Error: ' + err);
-})
-})
+app.post('/users', (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+    .then((user) => {
+      if (user) {
+      //If the user is found, send a response that it already exists
+        return res.status(400).send(req.body.Username + ' already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: hashedPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 //Adds movies to users favorites
 app.post('/users/:username/movies/:movieID', passport.authenticate("jwt", { session: false }), (req, res) => {

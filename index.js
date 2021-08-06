@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
+const dotenv = require('dotenv');
 require('./passport');
 
 /*mongoose.connect('mongodb://localhost:27017/myFlixDB',
@@ -23,8 +24,6 @@ require('./passport');
    useNewUrlParser: true, 
    useUnifiedTopology: true 
   });*/
-//mongoimport --uri mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/myFlixDB --collection directors movies genres users --type json --file movie_api/collections/movie_DB.json
-//mongoimport --uri mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/myFlixDB --collection movies --type json --file movie_api/collections/movie_DB.json
 //mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
 
 /* const MongoClient = require('mongodb').MongoClient;

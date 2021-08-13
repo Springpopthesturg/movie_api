@@ -1,9 +1,12 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy; 
 const passportJWT = require('passport-jwt');
-const models = require('./models.js');
 
-const users = models.user;
+const Models = require("./models");
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
 const JWTStrategy = passportJWT.Strategy;//jwt strategy assign to a variable
 const ExtractJWT = passportJWT.ExtractJwt; // extract method from header assign to a variable
 const { check, validationResult } = require('express-validator');
@@ -13,13 +16,15 @@ const { check, validationResult } = require('express-validator');
 passport.use(
     new LocalStrategy(
       {
-    usernameField: 'username',
-    passwordField: 'password',
+    usernameField: 'Username',
+    passwordField: 'Password',
   }, 
   (username, password, callback) => {
    console.log(username + '  ' + password);
-    users.findOne(
-      { username: username} /*, password: password }*/, 
+   console.log('====username', username)
+
+   Users.findOne(
+      { Username: username} /*, password: password }*/, 
       (error, user) => {
       if (error) {
         console.error(error);

@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
 const dotenv = require('dotenv');
+require('dotenv').config()
 require('./passport');
 
 /*mongoose.connect('mongodb://localhost:27017/myFlixDB',
@@ -41,13 +42,13 @@ mongoose.connect( process.env.CONNECTION_URI , {useNewUrlParser: true, useUnifie
 const cors = require('cors');
 app.use(cors());
 //Imports auth.js for logins
-const auth = require("./auth")(app);
 
 const { check, validationResult } = require('express-validator');
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(cors());
 
+const auth = require("./auth")(app);
 //GET Requests
 
 app.get('/', (req, res) => {
@@ -232,7 +233,7 @@ app.use((err, req, res, next) => {
 
 //listen response
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on Port ' + port);
 });

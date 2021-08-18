@@ -12,7 +12,6 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const passport = require('passport');
 const dotenv = require('dotenv');
-require('dotenv').config()
 require('./passport');
 
 /*mongoose.connect('mongodb://localhost:27017/myFlixDB',

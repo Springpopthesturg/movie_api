@@ -1,16 +1,18 @@
+const express = require('express');
+require('dotenv-extended').load();
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const uuid = require('uuid');
+const passport = require('passport');
 const mongoose = require("mongoose");
+const app = express();
 const Models = require("./models");
 
 const Movies = Models.Movie;
 const Users = Models.User;
 const Directors = Models.Director;
 
-const express = require('express');
-const app = express();
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const uuid = require('uuid');
-const passport = require('passport');
+
 require('./passport');
 
 /*mongoose.connect('mongodb://localhost:27017/myFlixDB',
@@ -57,7 +59,7 @@ app.get('/', (req, res) => {
 app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
-      res.status(201).json(movies);
+      res.status(200).json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -70,7 +72,7 @@ app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) 
 app.get('/movies/:genres', passport.authenticate("jwt", { session: false }), (req, res) => {
   Movies.find({ genre: req.params.genre })
     .then((movies) => {
-      res.status(201).json(movies);
+      res.status(200).json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -93,7 +95,7 @@ app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req
 app.get('/movies/:director', passport.authenticate("jwt", { session: false }), (req, res) => {
   Directors.find({ director: req.params.director })
     .then((movies) => {
-      res.status(201).json(movies);
+      res.status(200).json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -105,7 +107,7 @@ app.get('/movies/:director', passport.authenticate("jwt", { session: false }), (
 app.get('/directors/:name', passport.authenticate("jwt", { session: false }), (req, res) => {
   Directors.findOne({ name: req.params.name })
     .then((directors) => {
-      res.status(201).json(directors);
+      res.status(200).json(directors);
     })
     .catch((err) => {
       console.error(err);

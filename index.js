@@ -11,6 +11,7 @@ const Models = require("./models");
 const Movies = Models.Movie;
 const Users = Models.User;
 const Directors = Models.Director;
+const Genres = Models.Genre;
 
 
 require('./passport');
@@ -69,8 +70,8 @@ app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) 
 );
 
 //Return Movies of specified genre
-app.get('/movies/:genres', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Movies.find({ genre: req.params.genre })
+app.get('/movies/:genreid', passport.authenticate("jwt", { session: false }), (req, res) => {
+  Movies.find({ genreid: req.params.genreid })
     .then((movies) => {
       res.status(200).json(movies);
     })
@@ -82,7 +83,7 @@ app.get('/movies/:genres', passport.authenticate("jwt", { session: false }), (re
 
 //Return a single title of movie
 app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Movies.findOne({ title: req.params.title })
+  Movies.findOne({ Title: req.params.Title })
     .then((usermovie) => {
       res.json(usermovie);
     })
@@ -92,7 +93,7 @@ app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req
     });
 });
 //Returns list of Directors
-app.get('/movies/:director', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get('/directors', passport.authenticate("jwt", { session: false }), (req, res) => {
   Directors.find({ director: req.params.director })
     .then((movies) => {
       res.status(200).json(movies);

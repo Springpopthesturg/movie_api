@@ -8,7 +8,7 @@ let genreSchema = mongoose.Schema({
 });
 
 let movieSchema = mongoose.Schema({
-  Title: { type: String, required: true },
+  title: { type: String, required: true },
   description: { type: String, required: true },
   genreid: String,
   directorid: String,

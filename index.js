@@ -115,6 +115,31 @@ app.get('/directors/:name', passport.authenticate("jwt", { session: false }), (r
       res.status(500).send('Error: ' + err);
     });
 });
+
+// Get genres 
+app.get('/genres',passport.authenticate('jwt', { session:false }), (req, res) => {
+  Genres.find()
+    .then((genre) => {
+      res.status(200).json(genre);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).sned('Error: ' + err);
+    });
+});
+
+// Get genres by name 
+app.get('/genres/:Name',passport.authenticate('jwt',{ session:false }), (req, res) => {
+  Genres.findOne({ Name: req.params.Name })
+    .then((genre) => {
+      res.status(200).json(genre);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 //Return user by username
 app.get('/users/:username', passport.authenticate("jwt", { session: false }), (req, res) => {
   users.findOne({ username: req.params.username })

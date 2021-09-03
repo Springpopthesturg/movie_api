@@ -70,7 +70,7 @@ app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) 
 );
 
 //Return Movies of specified genre
-app.get('/movies/:genreid', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get('/movies/genres/:genreid', passport.authenticate("jwt", { session: false }), (req, res) => {
   Movies.find({ genreid: req.params.genreid })
     .then((movies) => {
       res.status(200).json(movies);
@@ -83,6 +83,7 @@ app.get('/movies/:genreid', passport.authenticate("jwt", { session: false }), (r
 
 //Return a single title of movie
 app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req, res) => {
+  console.log("got here +")
   Movies.findOne({ Title: req.params.title })
   .then((movies) => {
     res.status(200).json(movies);

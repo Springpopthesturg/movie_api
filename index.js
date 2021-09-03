@@ -83,7 +83,7 @@ app.get('/movies/:genreid', passport.authenticate("jwt", { session: false }), (r
 
 //Return a single title of movie
 app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Movies.findOne({ Title: req.params.Title })
+  Movies.findOne({ Title: req.params.title })
   .then((movies) => {
     res.status(200).json(movies);
     })

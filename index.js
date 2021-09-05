@@ -250,6 +250,50 @@ app.get('/documentation.html',/* passport.authenticate("jwt", { session: false }
 
 app.use(express.static('public'));
 
+//Update requests
+
+//update username
+
+app.put('/users/:Username',
+  [
+    check('Username', 'Username is required!').isLength({
+      min: 5
+    }),
+    check('Username', 'Username contains non alphanumerical characters!').isAlphanumeric(),
+    check('Password', 'Password is required!').not().isEmpty(),
+    check('Email', 'Email adress is not valid!').isEmail()
+  ],
+  passport.authenticate('jwt', { session: false }), (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        errors: errors.array()
+      });
+    }
+    Users.findOneAndUpdate({
+        Username: req.params.Username
+      }, {
+        $set: {
+          FirstName: req.body.FirstName,
+          LastName: req.body.LastName,
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birth: req.body.Birth
+        }
+      }, {
+        new: true
+      }, //this line makes sure that updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+        } else {
+          res.json(updatedUser);
+        }
+      });
+  });
+
 //Error response
 
 app.use((err, req, res, next) => {

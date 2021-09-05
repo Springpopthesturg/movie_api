@@ -10,8 +10,8 @@ let genreSchema = mongoose.Schema({
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
   Description: { type: String, required: true },
-  genreid: String,
-  directorid: String,
+  GenreID: String,
+  DirectorID: String,
   imageUrl: String,
   featured: Boolean,
 });

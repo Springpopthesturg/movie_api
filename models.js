@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 let genreSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  description: String,
-  genreid: String,
+  Name: { type: String, required: true },
+  Description: String,
+  GenreID: String,
 });
 
 let movieSchema = mongoose.Schema({
@@ -33,11 +33,11 @@ userSchema.methods.validatePassword = function (password) {
 };
 
 let directorSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  bio: String,
-  birthyear: Date,
-  deathyear: Date,
-  directorid: String,
+  Name: { type: String, required: true },
+  Bio: String,
+  Birth: Date,
+  Death: Date,
+  DirectorID: String,
 });
 
 let Genre = mongoose.model("Genre", genreSchema);

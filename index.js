@@ -105,8 +105,8 @@ app.get('/directors', passport.authenticate("jwt", { session: false }), (req, re
 });
 
 //Returns single director
-app.get('/directors/:name', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Directors.findOne({ name: req.params.name })
+app.get('/directors/:Name', passport.authenticate("jwt", { session: false }), (req, res) => {
+  Directors.findOne({ Name: req.params.Name })
     .then((directors) => {
       res.status(200).json(directors);
     })

@@ -154,7 +154,7 @@ app.get('/users/:username', passport.authenticate("jwt", { session: false }), (r
 
 //Return movie favorites by name
 app.get('/users/:username/favorites/:movie', passport.authenticate("jwt", { session: false }), (req, res) => {
-  users.findOne({ favoritesMovies: req.params.favoritesMovies })
+  Users.findOne({ favoritesMovies: req.params.favoritesMovies })
     .then((favMov) => {
       res.json(favMov);
     })
@@ -168,7 +168,7 @@ app.get('/users/:username/favorites/:movie', passport.authenticate("jwt", { sess
 
 //delete user
 app.delete('/users/:username', passport.authenticate("jwt", { session: false }), (req, res) => {
-  users.findOneAndRemove({ username: req.params.username })
+  Users.findOneAndRemove({ username: req.params.username })
     .then((user) => {
       if (!user) {
         res.status(400).send(req.params.username + ' was not found');
@@ -183,7 +183,7 @@ app.delete('/users/:username', passport.authenticate("jwt", { session: false }),
 });
 //delete from users favorites
 app.delete('/users/:username/favorites', passport.authenticate("jwt", { session: false }), (req, res) => {
-  users.findOneAndRemove({ favoritesMovies: req.params.favoritesMovies })
+  Users.findOneAndRemove({ favoritesMovies: req.params.favoritesMovies })
     .then((favMov) => {
       if (!favMov) {
         res.status(400).send(req.params.favoritesMovies + ' was not found');
@@ -230,18 +230,18 @@ app.post('/users', (req, res) => {
 
 //Adds movies to users favorites
 app.post('/users/:username/favorites', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username },
-    {
-      $addToSet: { Favorites: req.params.MovieID },
-    },
-    { new: true }, (err, updatedUser) => {
-      if (err) {
-        res.status(500).send("error: " + err);
-      }
-      else {
-        res.json(updatedUser);
-      }
-    });
+  Users.findOneAndUpdate({ Username: req.params.Username }, 
+    { $push: { FavoriteMovies: req.params.MovieID
+    }
+  }, 
+  { new: true },
+  (err, updatedUser) => { if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 app.get('/documentation.html',/* passport.authenticate("jwt", { session: false }),*/(req, res) => {

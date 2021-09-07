@@ -167,7 +167,7 @@ app.get('/users/:username/favorites/:movie', passport.authenticate("jwt", { sess
 //DELETE requests
 
 //delete user
-app.delete('/users/:username', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.delete('/users/:Username', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {

@@ -141,7 +141,7 @@ app.get('/genres/:Name',passport.authenticate('jwt',{ session:false }), (req, re
 });
 
 //Return user by username
-app.get('/users/:username', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get('/users/:Username', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -153,7 +153,7 @@ app.get('/users/:username', passport.authenticate("jwt", { session: false }), (r
 });
 
 //Return movie favorites by name
-app.get('/users/:username/favorites/:movie', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get('/users/:Username/favorites/:movie', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOne({ favoritesMovies: req.params.favoritesMovies })
     .then((favMov) => {
       res.json(favMov);
@@ -182,20 +182,22 @@ app.delete('/users/:Username', passport.authenticate("jwt", { session: false }),
     });
 });
 //delete from users favorites
-app.delete('/users/:username/favorites', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Users.findOneAndRemove({ favoritesMovies: req.params.favoritesMovies })
-    .then((favMov) => {
-      if (!favMov) {
-        res.status(400).send(req.params.favoritesMovies + ' was not found');
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    { $pull: { FavoriteMovies: req.params.MovieID } },
+    { new: true },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
       } else {
-        res.status(200).send(req.params.favoritesMovies + ' was deleted.');
+        res.json(updatedUser);
       }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('error: ' + err);
-    });
+    }
+  );
 });
+
 
 // POST Requests
 
@@ -229,11 +231,9 @@ app.post('/users', (req, res) => {
 });
 
 //Adds movies to users favorites
-app.post('/users/:username/favorites', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.post('/users/:username/movies/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, 
-    { $push: { FavoriteMovies: req.params.MovieID
-    }
-  }, 
+  { $pull: { FavoriteMovies: req.params.MovieID } }, 
   { new: true },
   (err, updatedUser) => { if (err) {
       console.error(err);

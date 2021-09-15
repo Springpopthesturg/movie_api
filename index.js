@@ -231,9 +231,9 @@ app.post('/users', (req, res) => {
 });
 
 //Adds movies to users favorites
-app.post('/users/:username/MovieID/:Id', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.post('/users/:Username/favorites/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, 
-  { $push: { FavoriteMovies: req.params.Id } }, 
+  { $push: { FavoriteMovies: req.params.MovieID } }, 
   { new: true },
   (err, updatedUser) => { 
     if (err) {

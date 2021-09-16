@@ -182,7 +182,7 @@ app.delete('/users/:Username', passport.authenticate("jwt", { session: false }),
     });
 });
 //delete from users favorites
-app.delete('/users/:Username/movies/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
+app.delete('/users/:Username/favorite/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
     { $pull: { FavoriteMovies: req.params.MovieID } },

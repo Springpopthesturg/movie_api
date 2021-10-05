@@ -21,11 +21,11 @@ require('./passport');
    useNewUrlParser: true, 
    useUnifiedTopology: true 
   });*/
-  /*mongoose.connect('mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/MyFlixDB?retryWrites=true&w=majority',
- { 
-   useNewUrlParser: true, 
-   useUnifiedTopology: true 
-  });*/
+/*mongoose.connect('mongodb+srv://Springpopthesturg:Bigolepp123@myflixdb.7sr51.mongodb.net/MyFlixDB?retryWrites=true&w=majority',
+{ 
+ useNewUrlParser: true, 
+ useUnifiedTopology: true 
+});*/
 //mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
 
 /* const MongoClient = require('mongodb').MongoClient;
@@ -37,8 +37,8 @@ client.connect(err => {
   client.close();
 }); */
 
-mongoose.connect( process.env.CONNECTION_URI , {useNewUrlParser: true, useUnifiedTopology: true}).then(() => console.log("Connection Successful"))
-.catch((err) => console.log(err));
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log("Connection Successful"))
+  .catch((err) => console.log(err));
 
 const cors = require('cors');
 app.use(cors());
@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 });
 
 //Return all movies
-app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) => {
+/*app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
@@ -67,7 +67,17 @@ app.get('/movies', passport.authenticate("jwt", { session: false }), (req, res) 
       res.status(500).send("Error: " + err);
     });
 }
-);
+);*/
+app.get("/movies", function (req, res) {
+  Movies.find()
+    .then(function (movies) {
+      res.status(201).json(movies);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 //Return Movies of specified genre
 app.get('/movies/genres/:genreid', passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -84,8 +94,8 @@ app.get('/movies/genres/:genreid', passport.authenticate("jwt", { session: false
 //Return a single title of movie
 app.get('/movies/:title', passport.authenticate("jwt", { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.title })
-  .then((movies) => {
-    res.status(200).json(movies);
+    .then((movies) => {
+      res.status(200).json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -117,7 +127,7 @@ app.get('/directors/:Name', passport.authenticate("jwt", { session: false }), (r
 });
 
 // Get genres 
-app.get('/genres',passport.authenticate('jwt', { session:false }), (req, res) => {
+app.get('/genres', passport.authenticate('jwt', { session: false }), (req, res) => {
   Genres.find()
     .then((genre) => {
       res.status(200).json(genre);
@@ -129,7 +139,7 @@ app.get('/genres',passport.authenticate('jwt', { session:false }), (req, res) =>
 });
 
 // Get genres by name 
-app.get('/genres/:Name',passport.authenticate('jwt',{ session:false }), (req, res) => {
+app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Genres.findOne({ Name: req.params.Name })
     .then((genre) => {
       res.status(200).json(genre);
@@ -183,7 +193,7 @@ app.delete('/users/:Username', passport.authenticate("jwt", { session: false }),
 });
 //delete from users favorites
 app.delete('/users/:Username/favorites/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Users.findOneAndUpdate ({ Username: req.params.Username },
+  Users.findOneAndUpdate({ Username: req.params.Username },
     { $pull: { FavoriteMovies: req.params.MovieID } },
     { new: true },
     (err, updatedUser) => {
@@ -206,7 +216,7 @@ app.post('/users', (req, res) => {
   Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
-      //If the user is found, send a response that it already exists
+        //If the user is found, send a response that it already exists
         return res.status(400).send(req.body.Username + ' already exists');
       } else {
         Users
@@ -231,17 +241,17 @@ app.post('/users', (req, res) => {
 
 //Adds movies to users favorites
 app.post('/users/:Username/favorites/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, 
-  { $push: { FavoriteMovies: req.params.MovieID } }, 
-  { new: true },
-  (err, updatedUser) => { 
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+  Users.findOneAndUpdate({ Username: req.params.Username },
+    { $push: { FavoriteMovies: req.params.MovieID } },
+    { new: true },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
 });
 
 app.get('/documentation.html',/* passport.authenticate("jwt", { session: false }),*/(req, res) => {
@@ -271,19 +281,19 @@ app.put('/users/:Username',
       });
     }
     Users.findOneAndUpdate({
-        Username: req.params.Username
-      }, {
-        $set: {
-          FirstName: req.body.FirstName,
-          LastName: req.body.LastName,
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birth: req.body.Birth
-        }
-      }, {
-        new: true
-      }, //this line makes sure that updated document is returned
+      Username: req.params.Username
+    }, {
+      $set: {
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birth: req.body.Birth
+      }
+    }, {
+      new: true
+    }, //this line makes sure that updated document is returned
       (err, updatedUser) => {
         if (err) {
           console.error(err);

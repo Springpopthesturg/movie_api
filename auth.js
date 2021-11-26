@@ -10,9 +10,11 @@ let generateJWTToken = (user) => {
   });
 }
 
-/*
-Post login create JWT token
-*/
+/**
+  * POST login.
+  * @param {*} router
+  * @returns {object} Token, User
+  */
 module.exports = (router) => {
   router.post('/login', (req, res) => {
     console.log('====login', req.body)
